@@ -119,7 +119,7 @@ def generate_product_data(product_data, category_name):
                 "Type": "variation",
                 "SKU": variant_sku,
                 "Parent": parent_sku,
-                "Name": f"{product_data['title']} - {variant_data['title']}",
+                "Name": f"{product_data['title']} - {variant_data['title'].replace(' / ', ' - ')}",
                 "Published": "1",
                 "Is featured?": "0",
                 "Visibility in catalog": "visible",
