@@ -107,7 +107,7 @@ def generate_product_data(product_data, category_name):
         # Add variant options to parent data
         for i, option_values in enumerate(variant_options):
             parent_product_data[f"Attribute {i+1} name"] = options[i]['name']
-            parent_product_data[f"Attribute {i+1} value(s)"] = ', '.join(option_values)
+            parent_product_data[f"Attribute {i+1} value(s)"] = '|'.join(option_values)
         
         products_data.append(parent_product_data)
 
@@ -154,7 +154,7 @@ def generate_product_data(product_data, category_name):
                 "Attribute 3 value(s)": variant_data.get('option3', ''),
                 "Attribute 3 visible": "",
                 "Attribute 3 global": "",
-                "Images": ", ".join(get_primary_image_urls_for_variant(variant_data)),
+                "Images": ", ".join(get_primary_image_urls_for_variant(variant_data))
             }
             products_data.append(variant)
     else:  # If the product has only one variant
@@ -240,8 +240,10 @@ for category, url in categories_urls.items():
     scraped_products = scrape_product_data(url, category, all_products_data)
     
     if scraped_products:
-        df = pd.DataFrame(scraped_products)
+        column_names = ["ID", "Type", "SKU", "Parent", "Name", "Published", "Is featured?", "Visibility in catalog", "Short description", "Description", "Tax status", "Tax class", "In stock?", "Backorders allowed", "Sold_individually?", "Weight (lbs)", "Length (in)", "Width (in)", "Height (in)", "Allow customer reviews?", "Purchase note", "Sale price", "Regular price", "Categories", "Tags", "Shipping class", "Attribute 1 name", "Attribute 1 value(s)", "Attribute 2 name", "Attribute 2 value(s)", "Attribute 1 visible", "Attribute 1 global", "Attribute 2 visible", "Attribute 2 global", "Attribute 3 name", "Attribute 3 value(s)", "Attribute 3 visible", "Attribute 3 global", "Images"]
+        df = pd.DataFrame(scraped_products, columns=column_names)
         filename = f"{category.replace(' ', '_').replace('/', '_').lower()}_products.csv"  
         filepath = os.path.join(folder_path, filename)
+         
         df.to_csv(filepath, index=False)
         print(f"All products for category: {category}, saved to {filepath}.")
